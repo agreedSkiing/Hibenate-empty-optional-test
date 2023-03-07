@@ -1,0 +1,35 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.autobuild.enabled": true,
+  "java.completion.importOrder": [
+    "#"
+  ],
+  "java.cleanup.actionsOnSave": [
+    "addDeprecated",
+    "addFinalModifier",
+    "addOverride",
+    "instanceofPatternMatch",
+    "invertEquals",
+    "lambdaExpression",
+    "switchExpression",
+    "stringConcatToTextBlock",
+    "tryWithResource"
+  ],
+  "java.codeAction.sortMembers.avoidVolatileChanges": true,
+  "java.codeGeneration.insertionLocation": "lastMember",
+  "java.eclipse.downloadSources": true,
+  "java.codeGeneration.hashCodeEquals.useInstanceof": true,
+  "java.codeGeneration.hashCodeEquals.useJava7Objects": true,
+  "java.codeGeneration.useBlocks": true,
+  "java.codeGeneration.toString.codeStyle": "STRING_BUILDER",
+  "java.format.enabled": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.detectIndentation": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "java.compile.nullAnalysis.mode": "automatic"
+}
