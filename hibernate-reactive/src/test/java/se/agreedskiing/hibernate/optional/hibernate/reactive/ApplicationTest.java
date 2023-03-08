@@ -7,7 +7,6 @@ import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import se.agreedskiing.hibernate.optional.hibernate.reactive.Application;
 
 class ApplicationTest extends PostgresContainer {
 
