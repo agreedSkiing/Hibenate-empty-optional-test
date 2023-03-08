@@ -1,4 +1,4 @@
-package se.agreedskiing.hibernate.timezone.hibernate.reactive;
+package se.agreedskiing.hibernate.list.hibernate.reactive;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.agreedskiing.hibernate.list.hibernate.reactive.Application;
 
 class ApplicationTest extends PostgresContainer {
 

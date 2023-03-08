@@ -1,4 +1,4 @@
-package se.agreedskiing.hibernate.timezone.hibernate.reactive;
+package se.agreedskiing.hibernate.list.hibernate.reactive;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;

@@ -1,4 +1,4 @@
-package se.agreedskiing.hibernate.timezone.hibernate.reactive;
+package se.agreedskiing.hibernate.list.hibernate.reactive;
 
 public enum ErrorTexts {
   QUERY_FAILED("Query failed with an exception instead of working");

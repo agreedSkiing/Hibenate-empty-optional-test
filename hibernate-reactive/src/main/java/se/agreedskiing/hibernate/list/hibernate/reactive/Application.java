@@ -1,7 +1,7 @@
 package se.agreedskiing.hibernate.list.hibernate.reactive;
 
 import io.smallrye.mutiny.Uni;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,14 +20,20 @@ public class Application {
     final String persistenceUnit,
     final int port
   ) {
-    return queryLongs(persistenceUnit, port, List.of(1L, 2L, 3L));
+    final var list = new ArrayList<Long>();
+    list.add(1L);
+    list.add(2L);
+    list.add(3L);
+    list.add(4L);
+    return queryLongs(persistenceUnit, port, list);
   }
 
   public Uni<List<Test>> emptyListOfLongs(
     final String persistenceUnit,
     final int port
   ) {
-    return queryLongs(persistenceUnit, port, Collections.emptyList());
+    final var list = new ArrayList<Long>();
+    return queryLongs(persistenceUnit, port, list);
   }
 
   public Uni<List<Test>> nullListOfLongs(
@@ -41,23 +47,20 @@ public class Application {
     final String persistenceUnit,
     final int port
   ) {
-    return queryUUIDs(
-      persistenceUnit,
-      port,
-      List.of(
-        UUID.fromString("40e6215d-b5c6-4896-987c-f30f3678f608"),
-        UUID.fromString("6ecd8c99-4036-403d-bf84-cf8400f67836"),
-        UUID.fromString("6366d53a-c35c-41b2-90ce-6c43b73490d9"),
-        UUID.fromString("37a55e88-5794-48d2-9805-0a44e6edb0b3")
-      )
-    );
+    final var list = new ArrayList<UUID>();
+    list.add(UUID.fromString("40e6215d-b5c6-4896-987c-f30f3678f608"));
+    list.add(UUID.fromString("6ecd8c99-4036-403d-bf84-cf8400f67836"));
+    list.add(UUID.fromString("6366d53a-c35c-41b2-90ce-6c43b73490d9"));
+    list.add(UUID.fromString("37a55e88-5794-48d2-9805-0a44e6edb0b3"));
+    return queryUUIDs(persistenceUnit, port, list);
   }
 
   public Uni<List<Test>> emptyListOfUUIDs(
     final String persistenceUnit,
     final int port
   ) {
-    return queryUUIDs(persistenceUnit, port, Collections.emptyList());
+    final var list = new ArrayList<UUID>();
+    return queryUUIDs(persistenceUnit, port, list);
   }
 
   public Uni<List<Test>> nullListOfUUIDs(
@@ -71,18 +74,20 @@ public class Application {
     final String persistenceUnit,
     final int port
   ) {
-    return queryStrings(
-      persistenceUnit,
-      port,
-      List.of("test1", "test2", "test3", "test4")
-    );
+    final var list = new ArrayList<String>();
+    list.add("test1");
+    list.add("test2");
+    list.add("test3");
+    list.add("test4");
+    return queryStrings(persistenceUnit, port, list);
   }
 
   public Uni<List<Test>> emptyListOfStrings(
     final String persistenceUnit,
     final int port
   ) {
-    return queryStrings(persistenceUnit, port, Collections.emptyList());
+    final var list = new ArrayList<String>();
+    return queryStrings(persistenceUnit, port, list);
   }
 
   public Uni<List<Test>> nullListOfStrings(
