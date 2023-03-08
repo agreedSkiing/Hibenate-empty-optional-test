@@ -10,7 +10,7 @@ import org.hibernate.reactive.mutiny.Mutiny;
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory;
 import se.agreedskiing.hibernate.list.hibernate.reactive.entities.Test;
 
-public class MutinyApplication {
+public class Application {
 
   public static void main(final String[] args) {
     //NO use currently

@@ -6,18 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.agreedskiing.hibernate.list.hibernate.reactive.MutinyApplication;
+import se.agreedskiing.hibernate.list.hibernate.reactive.Application;
 
-class MutinyApplicationTest extends PostgresContainer {
+class ApplicationTest extends PostgresContainer {
 
-  MutinyApplication repository;
+  Application repository;
 
   static final String PERSISTANCE_UNIT = "standard";
   static final int PORT = PostgresContainer.DATABASE.getFirstMappedPort();
 
   @BeforeEach
   void setUp() {
-    repository = new MutinyApplication();
+    repository = new Application();
   }
 
   @Test
