@@ -73,8 +73,7 @@ public class Application {
   private List<Test> queryLongs(final List<Long> ids) {
     return this.entityManagerFactory.createEntityManager()
       .createQuery(
-        //"SELECT t FROM Test t WHERE (COALESCE(:list, NULL) IS NOT NULL OR t.id IN (:list))", //RUN 1
-        "SELECT t FROM Test t WHERE (COALESCE(:list, NULL) IS NOT NULL OR t.id IN (:list))", //RUN 2
+        "SELECT t FROM Test t WHERE (COALESCE(:list, NULL) IS NOT NULL OR t.id IN (:list))",
         Test.class
       )
       .setParameter("list", ids)
