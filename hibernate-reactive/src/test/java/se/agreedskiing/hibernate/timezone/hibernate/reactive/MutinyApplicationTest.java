@@ -21,7 +21,7 @@ class MutinyApplicationTest extends PostgresContainer {
   }
 
   @Test
-  void get_a_list_containt_values() {
+  void get_a_list_through_IDs_containt_values() {
     repository
       .listContaingLongs(PERSISTANCE_UNIT, PORT)
       .invoke(entity -> assertFalse(entity.isEmpty()))
@@ -32,7 +32,7 @@ class MutinyApplicationTest extends PostgresContainer {
   }
 
   @Test
-  void get_an_empty_list() {
+  void get_an_empty_list_through_IDs() {
     repository
       .emptyListOfLongs(PERSISTANCE_UNIT, PORT)
       .invoke(entity -> assertTrue(entity.isEmpty()))
@@ -43,9 +43,75 @@ class MutinyApplicationTest extends PostgresContainer {
   }
 
   @Test
-  void get_a_null_list_throws() {
+  void get_a_empty_list_when_IDs_is_null() {
     repository
       .nullListOfLongs(PERSISTANCE_UNIT, PORT)
+      .invoke(entity -> assertTrue(entity.isEmpty()))
+      .subscribe()
+      .withSubscriber(UniAssertSubscriber.create())
+      .awaitItem()
+      .assertCompleted();
+  }
+
+  @Test
+  void get_a_list_through_Strings_containt_values() {
+    repository
+      .listContaingStrings(PERSISTANCE_UNIT, PORT)
+      .invoke(entity -> assertFalse(entity.isEmpty()))
+      .subscribe()
+      .withSubscriber(UniAssertSubscriber.create())
+      .awaitItem()
+      .assertCompleted();
+  }
+
+  @Test
+  void get_an_empty_list_through_Strings() {
+    repository
+      .emptyListOfStrings(PERSISTANCE_UNIT, PORT)
+      .invoke(entity -> assertTrue(entity.isEmpty()))
+      .subscribe()
+      .withSubscriber(UniAssertSubscriber.create())
+      .awaitItem()
+      .assertCompleted();
+  }
+
+  @Test
+  void get_a_empty_list_when_Strings_is_null() {
+    repository
+      .nullListOfStrings(PERSISTANCE_UNIT, PORT)
+      .invoke(entity -> assertTrue(entity.isEmpty()))
+      .subscribe()
+      .withSubscriber(UniAssertSubscriber.create())
+      .awaitItem()
+      .assertCompleted();
+  }
+
+  @Test
+  void get_a_list_through_UUIDs_containt_values() {
+    repository
+      .listContaingUUIDs(PERSISTANCE_UNIT, PORT)
+      .invoke(entity -> assertFalse(entity.isEmpty()))
+      .subscribe()
+      .withSubscriber(UniAssertSubscriber.create())
+      .awaitItem()
+      .assertCompleted();
+  }
+
+  @Test
+  void get_an_empty_list_through_UUIDs() {
+    repository
+      .emptyListOfUUIDs(PERSISTANCE_UNIT, PORT)
+      .invoke(entity -> assertTrue(entity.isEmpty()))
+      .subscribe()
+      .withSubscriber(UniAssertSubscriber.create())
+      .awaitItem()
+      .assertCompleted();
+  }
+
+  @Test
+  void get_a_empty_list_when_UUIDs_is_null() {
+    repository
+      .nullListOfUUIDs(PERSISTANCE_UNIT, PORT)
       .invoke(entity -> assertTrue(entity.isEmpty()))
       .subscribe()
       .withSubscriber(UniAssertSubscriber.create())
