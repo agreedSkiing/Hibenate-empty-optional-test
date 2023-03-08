@@ -1,8 +1,8 @@
-# Hibernate Reactive list IS EMPTY query testing
+# Hibernate optional query testing
 
-The purpose of this project is to test if Hibernate Reactive can handle `:list IS EMPTY OR t.COLUMN IN :list` with a comparison to Hibernate ORM 5 and 6 base implementations.
+The purpose of this project is to test if Hibernate Reactive can handle optional queries. This idea came by reading https://www.baeldung.com/spring-data-jpa-null-parameters and https://stackoverflow.com/questions/2488930/passing-empty-list-as-parameter-to-jpa-query-throws-error.
 
-First of all no the code can't handle `:list IS EMPTY OR t.COLUMN IN :list` ☹, but it seems to be able to handle `SELECT t FROM Test t WHERE (COALESCE(:list) IS NOT NULL OR t.id IN (:list))` for different values.
+**NOTE:** All Hibernate Reactive test are done with Mutiny.
 
 ## Formatting
 
@@ -28,5 +28,3 @@ mvn clean test --fail-at-end
 ```
 
 Each test launches a postgres in a testcontainer on a random port and each of them loads the `import.sql` script with the help of Hibernate.
-
-For test results please check the files named `COMMIT-*.md`.

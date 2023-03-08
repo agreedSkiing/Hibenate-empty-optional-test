@@ -1,10 +1,6 @@
-# Commit: 00e1cc72480f6de27ccccf62417108c36cd17772 and below - 2023-03-08T10:33:16+01:00
-
-This commit works great with Hibernate 5 but some errors are produced in Hibernate Reactive and Hibernate ORM 6 when doing trying to do the `SELECT t FROM Test t WHERE (COALESCE(:list) IS NOT NULL OR t.id IN (:list))`, `t.uu` or `t.field` where id is a Long, uu is an UUID and field is a String.
+# Commit: 00e1cc72480f6de27ccccf62417108c36cd17772 - failures - 2023-03-08T10:33:16+01:00
 
 ## Hibernate Reactive
-
-Only tested with Mutiny and here it seems to have some problems with list assigment.
 
 ```log
 [INFO] ---------< se.agreedskiing.hibernate.list:hibernate-reactive >----------
@@ -434,8 +430,6 @@ java.lang.AssertionError: Expected an item event but got a failure: io.vertx.cor
 ```
 
 ## Hibernate ORM 6
-
-Here the same query produceses a lot of errors, below is a log extract from the latest run.
 
 ```log
 [INFO] ----------< se.agreedskiing.hibernate.list:hibernate-orm-six >----------

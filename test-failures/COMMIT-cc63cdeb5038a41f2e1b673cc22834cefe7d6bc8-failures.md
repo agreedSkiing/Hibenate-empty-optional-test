@@ -1,6 +1,4 @@
-# Commit: 00e1cc72480f6de27ccccf62417108c36cd17772 - 2023-03-08T12:13:25+01:00
-
-This commit works great with Hibernate 5 and replaced immutable list and empty collections.empty with arraylists.
+# Commit: cc63cdeb5038a41f2e1b673cc22834cefe7d6bc8 - failures
 
 ## Hibernate Reactive
 
