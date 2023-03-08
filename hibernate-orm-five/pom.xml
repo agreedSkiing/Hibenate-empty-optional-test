@@ -10,7 +10,7 @@
   <name>Hibernate ORM 5</name>
 
   <parent>
-    <groupId>se.agreedskiing.hibernate.list</groupId>
+    <groupId>se.agreedskiing.hibernate.optional</groupId>
     <artifactId>test-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
