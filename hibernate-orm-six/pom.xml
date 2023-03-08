@@ -11,7 +11,7 @@
 
   <parent>
     <groupId>se.agreedskiing.hibernate.list</groupId>
-    <artifactId>reproducer-parent</artifactId>
+    <artifactId>test-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 

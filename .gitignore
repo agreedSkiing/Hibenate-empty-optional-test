@@ -41,7 +41,5 @@ nb-configuration.xml
 node_modules
 
 # Logs
-!run_1.log
-!run_2.log
 *.log
 *.log.*

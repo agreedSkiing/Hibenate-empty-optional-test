@@ -6,12 +6,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>se.agreedskiing.hibernate.list</groupId>
-  <artifactId>reproducer-parent</artifactId>
+  <artifactId>test-parent</artifactId>
   <packaging>pom</packaging>
-  <name>Check List IS EMPTY reproducer for Hibenate Reactive</name>
+  <name>Check List IS EMPTY tester for Hibenate Reactive</name>
   <description>
-    Parent POM for reproducers regarding passing LIST IS EMPTY in query for
-    Hibernate Reactive.
+    Parent POM for testing passing LIST IS EMPTY in query for Hibernate
+    Reactive.
     This project also contains Hibernate ORM for comparison.
   </description>
   <version>1.0.0-SNAPSHOT</version>

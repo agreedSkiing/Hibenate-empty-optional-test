@@ -13,7 +13,7 @@
       "group": "test",
       "problemMatcher": [],
       "label": "test",
-      "command": "mvn -B clean test --fae"
+      "command": "mvn -B clean test --fae | tee run-$(date +%Y-%m-%d-%H-%M-%S).log"
     },
     {
       "type": "shell",
