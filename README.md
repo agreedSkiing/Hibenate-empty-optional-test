@@ -37,7 +37,10 @@ No errors at all 😄
 
 Only tested with Mutiny and here it seems to have some problems with list assigment.
 
-<pre style="max-height:600px">
+<details>
+    <summary>Log from test</summary>
+
+```log
 [INFO] ---------< se.agreedskiing.hibernate.list:hibernate-reactive >----------
 [INFO] Building Hibernate Reactive 1.0.0-SNAPSHOT                         [4/4]
 [INFO]   from hibernate-reactive/pom.xml
@@ -462,13 +465,18 @@ java.lang.AssertionError: Expected an item event but got a failure: io.vertx.cor
 [ERROR]   ApplicationTest.get_a_list_through_UUIDs_containt_values:96 Expected an item event but got a failure: io.vertx.core.impl.NoStackTraceThrowable: Parameter at position[0] with class = [java.util.UUID] and value = [40e6215d-b5c6-4896-987c-f30f3678f608] can not be coerced to the expected class = [java.lang.String] for encoding.
 [INFO]
 [ERROR] Tests run: 9, Failures: 2, Errors: 0, Skipped: 0
-</pre>
+```
+
+</details>
 
 #### Hibernate ORM 6
 
 Here the same query produceses a lot of errors, below is a log extract from the latest run.
 
-<pre style="max-height:600px">
+<details>
+    <summary>Log from test</summary>
+
+```log
 [INFO] ----------< se.agreedskiing.hibernate.list:hibernate-orm-six >----------
 [INFO] Building Hibernate ORM 6 1.0.0-SNAPSHOT                            [3/4]
 [INFO]   from hibernate-orm-six/pom.xml
@@ -1115,4 +1123,6 @@ java.lang.AssertionError
 [ERROR]   ApplicationTest.get_an_empty_list_through_UUIDs:99 Query failed with an exception instead of working
 [INFO]
 [ERROR] Tests run: 9, Failures: 6, Errors: 0, Skipped: 0
-</pre>
+```
+
+</details>
