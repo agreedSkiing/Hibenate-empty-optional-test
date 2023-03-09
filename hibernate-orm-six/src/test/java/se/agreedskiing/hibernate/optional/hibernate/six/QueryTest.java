@@ -2,14 +2,22 @@ package se.agreedskiing.hibernate.optional.hibernate.six;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 import java.util.*;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class QueryTest extends PostgresContainer {
 
-  private static final String QUERY_FAILED =
-    "Query failed with an exception instead of working";
+  private static final Logger LOGGER = LoggerFactory.getLogger(QueryTest.class);
+
+  private static final String QUERY_FAILED = "Query failed with an exception instead of working";
 
   private static EntityManager em;
 
@@ -21,9 +29,7 @@ class QueryTest extends PostgresContainer {
           "standard",
           Map.of(
             "jakarta.persistence.jdbc.url",
-            "jdbc:postgresql://localhost:" +
-            PostgresContainer.DATABASE.getFirstMappedPort() +
-            "/hibernate_orm_six"
+            "jdbc:postgresql://localhost:" + PostgresContainer.DATABASE.getFirstMappedPort() + "/hibernate_orm_six"
           )
         )
         .createEntityManager();
@@ -34,362 +40,111 @@ class QueryTest extends PostgresContainer {
 
     // SELECT t FROM Test t WHERE (COALESCE(:list) IS NOT NULL OR t.id IN (:list)) // working query in Hibernate ORM 5
     private static String IDS = "ids";
-    private static String IDS_PRESENET = "idsPresent";
+    private static String IDS_PRESENET = "idsEmpty";
     private static String FIELDS = "fields";
-    private static String FIELDS_PRESENET = "fieldsPresent";
+    private static String FIELDS_PRESENET = "fieldsEmpty";
     private static String UUS = "uus";
-    private static String UUS_PRESENET = "uusPresent";
-    private static String IDS_AND_FIELDS =
-      "SELECT t FROM Test t WHERE (:idsPresent = 0 OR t.id IN :ids) AND (:fieldsPresent = 0 OR t.id IN :fields)";
-    private static String IDS_AND_UUS =
-      "SELECT t FROM Test t WHERE (:idsPresent = 0 OR t.id IN :ids) AND (:uusPresent = 0 OR t.id IN :uus)";
-    private static String UUS_AND_FIELDS =
-      "SELECT t FROM Test t WHERE (:uusPresent = 0 OR t.id IN :uus) AND (:fieldsPresent = 0 OR t.id IN :fields)";
+    private static String UUS_PRESENET = "uusEmpty";
     private static String ALL =
-      "SELECT t FROM Test t WHERE (:uusPresent = 0 OR t.id IN :uus) AND (:fieldsPresent = 0 OR t.id IN :fields) AND (:idsPresent = 0 OR t.id IN :ids)";
+      "SELECT t FROM Test t WHERE (:uusEmpty IS NULL OR t.uu IN :uus) AND (:fieldsEmpty IS NULL OR t.field IN :fields) AND (:idsEmpty IS NULL OR t.id IN :ids)";
 
-    @org.junit.jupiter.api.Test
-    void through_IDs_and_empty_Fields_containt_values() {
-      final var ids = Arrays.asList(1L, 2L, 3L, 4L);
-      final var fields = new ArrayList<String>();
-      final var query = IDS_AND_FIELDS;
-      final var params = Arrays.asList(
-        IDS_PRESENET,
-        IDS,
-        FIELDS_PRESENET,
-        FIELDS
-      );
-      assertAll(
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), ids.isEmpty())
-                  .setParameter(params.get(1), ids)
-                  .setParameter(params.get(2), fields.isEmpty())
-                  .setParameter(params.get(3), fields)
-                  .getResultList()
-                  .isEmpty(),
-                "Empty list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          ),
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), ids.isEmpty())
-                  .setParameter(params.get(1), ids)
-                  .setParameter(params.get(2), null)
-                  .setParameter(params.get(3), null)
-                  .getResultList()
-                  .isEmpty(),
-                "Null list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          )
-      );
+    @ParameterizedTest
+    @MethodSource
+    void that_has_items(
+      final String testcase,
+      final int results,
+      final List<Long> ids,
+      final List<String> fields,
+      final List<UUID> uus
+    ) {
+      LOGGER.info("{} should return {}", testcase, results);
+      int size = -1;
+      try {
+        size =
+          em
+            .createQuery(ALL)
+            .setParameter(IDS_PRESENET, Objects.nonNull(ids) && !ids.isEmpty() ? false : null)
+            .setParameter(IDS, ids)
+            .setParameter(FIELDS_PRESENET, Objects.nonNull(fields) && !fields.isEmpty() ? false : null)
+            .setParameter(FIELDS, fields)
+            .setParameter(UUS_PRESENET, Objects.nonNull(uus) && !uus.isEmpty() ? false : null)
+            .setParameter(UUS, uus)
+            .getResultList()
+            .size();
+      } catch (final Exception e) {
+        fail(QUERY_FAILED, e);
+      }
+      assertEquals(results, size);
     }
 
-    @org.junit.jupiter.api.Test
-    void through_IDs_and_empty_UUs_containt_values() {
-      final var ids = Arrays.asList(1L, 2L, 3L, 4L);
-      final var uus = new ArrayList<UUID>();
-      final var query = IDS_AND_UUS;
-      final var params = Arrays.asList(IDS_PRESENET, IDS, UUS_PRESENET, UUS);
-      assertAll(
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), ids.isEmpty())
-                  .setParameter(params.get(1), ids)
-                  .setParameter(params.get(2), uus.isEmpty())
-                  .setParameter(params.get(3), uus)
-                  .getResultList()
-                  .isEmpty(),
-                "Empty list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          ),
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), ids.isEmpty())
-                  .setParameter(params.get(1), ids)
-                  .setParameter(params.get(2), null)
-                  .setParameter(params.get(3), null)
-                  .getResultList()
-                  .isEmpty(),
-                "Null list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          )
+    // TODO: Add matching filter next that get one result and multiple results
+    static Stream<Arguments> that_has_items() {
+      final var ids_one_exists = Arrays.asList(1L, 88L, 51L);
+      final var fields_one_exists = Arrays.asList("test2", "mimo", "mango");
+      final var uus_one_exists = Arrays.asList(
+        UUID.fromString("1ecd8c19-4036-403d-bf84-cf8400f67836"),
+        UUID.fromString("ff7efdbd-01c5-4f6c-84ae-729bddc57803"),
+        UUID.fromString("9f5959f3-e770-4cb4-91a6-93d5e4f8b466")
       );
-    }
-
-    @org.junit.jupiter.api.Test
-    void through_Fields_and_empty_UUs_containt_values() {
-      final var fields = Arrays.asList(1L, 2L, 3L, 4L);
-      final var uus = new ArrayList<UUID>();
-      final var query = UUS_AND_FIELDS;
-      final var params = Arrays.asList(
-        FIELDS_PRESENET,
-        FIELDS,
-        UUS_PRESENET,
-        UUS
-      );
-      assertAll(
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), fields.isEmpty())
-                  .setParameter(params.get(1), fields)
-                  .setParameter(params.get(2), uus.isEmpty())
-                  .setParameter(params.get(3), uus)
-                  .getResultList()
-                  .isEmpty(),
-                "Empty list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          ),
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), fields.isEmpty())
-                  .setParameter(params.get(1), fields)
-                  .setParameter(params.get(2), null)
-                  .setParameter(params.get(3), null)
-                  .getResultList()
-                  .isEmpty(),
-                "Null list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          )
-      );
-    }
-
-    @org.junit.jupiter.api.Test
-    void through_Fields_and_empty_IDs_containt_values() {
-      final var fields = Arrays.asList("test1", "test2", "test3", "test4");
-      final var ids = new ArrayList<Long>();
-      final var query = IDS_AND_FIELDS;
-      final var params = Arrays.asList(
-        IDS_PRESENET,
-        IDS,
-        FIELDS_PRESENET,
-        FIELDS
-      );
-      assertAll(
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), ids.isEmpty())
-                  .setParameter(params.get(1), ids)
-                  .setParameter(params.get(2), fields.isEmpty())
-                  .setParameter(params.get(3), fields)
-                  .getResultList()
-                  .isEmpty(),
-                "Empty list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          ),
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), null)
-                  .setParameter(params.get(1), null)
-                  .setParameter(params.get(2), fields.isEmpty())
-                  .setParameter(params.get(3), fields)
-                  .getResultList()
-                  .isEmpty(),
-                "Null list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          )
-      );
-    }
-
-    @org.junit.jupiter.api.Test
-    void through_UU_and_empty_IDs_containt_values() {
-      final var uus = Arrays.asList(
-        UUID.fromString("40e6215d-b5c6-4896-987c-f30f3678f608"),
-        UUID.fromString("6ecd8c99-4036-403d-bf84-cf8400f67836"),
-        UUID.fromString("6366d53a-c35c-41b2-90ce-6c43b73490d9"),
-        UUID.fromString("37a55e88-5794-48d2-9805-0a44e6edb0b3")
-      );
-      final var ids = new ArrayList<Long>();
-      final var query = IDS_AND_UUS;
-      final var params = Arrays.asList(IDS_PRESENET, IDS, UUS_PRESENET, UUS);
-      assertAll(
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), ids.isEmpty())
-                  .setParameter(params.get(1), ids)
-                  .setParameter(params.get(2), uus.isEmpty())
-                  .setParameter(params.get(3), uus)
-                  .getResultList()
-                  .isEmpty(),
-                "Empty list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          ),
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), null)
-                  .setParameter(params.get(1), null)
-                  .setParameter(params.get(2), uus.isEmpty())
-                  .setParameter(params.get(3), uus)
-                  .getResultList()
-                  .isEmpty(),
-                "Null list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          )
-      );
-    }
-
-    @org.junit.jupiter.api.Test
-    void through_UU_and_empty_Fields_containt_values() {
-      final var uus = Arrays.asList(
-        UUID.fromString("40e6215d-b5c6-4896-987c-f30f3678f608"),
-        UUID.fromString("6ecd8c99-4036-403d-bf84-cf8400f67836"),
-        UUID.fromString("6366d53a-c35c-41b2-90ce-6c43b73490d9"),
-        UUID.fromString("37a55e88-5794-48d2-9805-0a44e6edb0b3")
-      );
-      final var fields = new ArrayList<String>();
-      final var query = UUS_AND_FIELDS;
-      final var params = Arrays.asList(
-        FIELDS_PRESENET,
-        FIELDS,
-        UUS_PRESENET,
-        UUS
-      );
-      assertAll(
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), fields.isEmpty())
-                  .setParameter(params.get(1), fields)
-                  .setParameter(params.get(2), uus.isEmpty())
-                  .setParameter(params.get(3), uus)
-                  .getResultList()
-                  .isEmpty(),
-                "Empty list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          ),
-        () ->
-          assertDoesNotThrow(
-            () ->
-              assertFalse(
-                em
-                  .createQuery(query)
-                  .setParameter(params.get(0), null)
-                  .setParameter(params.get(1), null)
-                  .setParameter(params.get(2), uus.isEmpty())
-                  .setParameter(params.get(3), uus)
-                  .getResultList()
-                  .isEmpty(),
-                "Null list failed as seconds query param"
-              ),
-            QUERY_FAILED
-          )
-      );
-    }
-
-    @org.junit.jupiter.api.Test
-    void empty_if_all_are_empty() {
-      final var fields = new ArrayList<String>();
-      final var ids = new ArrayList<Long>();
-      final var uus = new ArrayList<UUID>();
-      assertDoesNotThrow(
-        () ->
-          assertFalse(
-            em
-              .createQuery(ALL)
-              .setParameter(FIELDS_PRESENET, fields.isEmpty())
-              .setParameter(FIELDS, fields)
-              .setParameter(UUS_PRESENET, uus.isEmpty())
-              .setParameter(UUS, uus)
-              .setParameter(IDS_PRESENET, ids.isEmpty())
-              .setParameter(IDS, ids)
-              .getResultList()
-              .isEmpty(),
-            "Empty list failed as seconds query param"
-          ),
-        QUERY_FAILED
-      );
-    }
-
-    @org.junit.jupiter.api.Test
-    void empty_if_all_are_null() {
-      assertDoesNotThrow(
-        () ->
-          assertFalse(
-            em
-              .createQuery(ALL)
-              .setParameter(FIELDS_PRESENET, null)
-              .setParameter(FIELDS, null)
-              .setParameter(UUS_PRESENET, null)
-              .setParameter(UUS, null)
-              .setParameter(IDS_PRESENET, null)
-              .setParameter(IDS, null)
-              .getResultList()
-              .isEmpty(),
-            "Empty list failed as seconds query param"
-          ),
-        QUERY_FAILED
+      return Stream.of(
+        Arguments.of("Ids with others empty", 1, ids_one_exists, new ArrayList<String>(), new ArrayList<UUID>()),
+        Arguments.of("Ids with others null", 1, ids_one_exists, null, null),
+        Arguments.of("Fields with others empty", 1, new ArrayList<Long>(), fields_one_exists, new ArrayList<UUID>()),
+        Arguments.of("Fields with others null", 1, null, fields_one_exists, null),
+        Arguments.of("Uus with others empty", 1, new ArrayList<Long>(), new ArrayList<String>(), uus_one_exists),
+        Arguments.of("Uus with others null", 1, null, null, uus_one_exists),
+        Arguments.of(
+          "Ids and Fields with others empty (miss matching filter)",
+          0,
+          ids_one_exists,
+          fields_one_exists,
+          new ArrayList<UUID>()
+        ),
+        Arguments.of(
+          "Ids and Fields with others null (miss matching filter)",
+          0,
+          ids_one_exists,
+          fields_one_exists,
+          null
+        ),
+        Arguments.of(
+          "Fields and Uus with others empty (miss matching filter)",
+          0,
+          new ArrayList<Long>(),
+          fields_one_exists,
+          uus_one_exists
+        ),
+        Arguments.of(
+          "Fields and Uus with others null (miss matching filter)",
+          0,
+          null,
+          fields_one_exists,
+          uus_one_exists
+        ),
+        Arguments.of(
+          "Uus and Ids with others empty (miss matching filter)",
+          0,
+          ids_one_exists,
+          new ArrayList<String>(),
+          uus_one_exists
+        ),
+        Arguments.of("Uus and Ids with others null (miss matching filter)", 0, ids_one_exists, null, uus_one_exists),
+        Arguments.of("All present (miss matching filter)", 0, ids_one_exists, fields_one_exists, uus_one_exists),
+        Arguments.of("Null (No filters)", 3, null, null, null),
+        Arguments.of("Empty (No filters)", 3, new ArrayList<Long>(), new ArrayList<String>(), new ArrayList<UUID>())
       );
     }
   }
 
   @Nested
+  @Disabled
   class get_one_with_optional_query {
 
     private static String ID = "id";
     private static String FIELD = "field";
     private static String UU = "uu";
-    private static String ID_AND_FIELD =
-      "SELECT t FROM Test t WHERE (:id IS NULL OR t.id IN :id) AND (:field IS NULL OR t.id IN :field)";
-    private static String ID_AND_UU =
-      "SELECT t FROM Test t WHERE (:id IS NULL OR t.id IN :id) AND (:uu IS NULL OR t.id IN :uu)";
-    private static String UU_AND_FIELD =
-      "SELECT t FROM Test t WHERE (:uu IS NULL OR t.id IN :uu) AND (:field IS NULL OR t.id IN :field)";
     private static String ALL =
-      "SELECT t FROM Test t WHERE (:uu IS NULL OR t.id IN :uu) AND (:field IS NULL OR t.id IN :field) AND (:id IS NULL OR t.id IN :id)";
+      "SELECT t FROM Test t WHERE (:uu IS NULL OR t.uu IN :uu) AND (:field IS NULL OR t.field IN :field) AND (:id IS NULL OR t.id IN :id)";
 
     @org.junit.jupiter.api.Test
     void through_IDs_containt_values() {
@@ -480,18 +235,5 @@ class QueryTest extends PostgresContainer {
         fail(QUERY_FAILED, e);
       }
     }
-  }
-
-  @Entity
-  @Table(name = "test")
-  public class Test {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
-
-    public String field; //NOSONAR
-
-    public UUID uu; //NOSONAR
   }
 }

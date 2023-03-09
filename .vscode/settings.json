@@ -27,6 +27,11 @@
   "editor.formatOnPaste": true,
   "editor.formatOnSaveMode": "file",
   "editor.detectIndentation": false,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "java.compile.nullAnalysis.mode": "automatic"
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.sources.organizeImports.starThreshold": 3,
+  "java.sources.organizeImports.staticStarThreshold": 2,
 }
