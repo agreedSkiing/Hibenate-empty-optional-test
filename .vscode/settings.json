@@ -1,9 +1,7 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.autobuild.enabled": true,
-  "java.completion.importOrder": [
-    "#"
-  ],
+  "java.completion.importOrder": ["#"],
   "java.cleanup.actionsOnSave": [
     "addDeprecated",
     "addFinalModifier",
@@ -30,8 +28,8 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
   },
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "java.compile.nullAnalysis.mode": "automatic",
   "java.sources.organizeImports.starThreshold": 3,
-  "java.sources.organizeImports.staticStarThreshold": 2,
+  "java.sources.organizeImports.staticStarThreshold": 2
 }
