@@ -1,5 +1,9 @@
 # Changelog
 
+## Commit ee6d3c3737b126b3464ae0913d9e564215133981
+
+So yeah... the single check queries from baeldung do not work at all here with UUID being null, so i think the only help would be to use the same approach as with `IN :parameter` queries, adding another value to the query ☹. See ee6d3c3737b126b3464ae0913d9e564215133981-failures.md
+
 ## Commit 8350d6c3a16b78cd480445cc4dfdcd1011faa5fa
 
 Rename done to new group id and fixed formatting in file from d303fc144a1c10325364f05e11a9661880a94bc5-failures.md
