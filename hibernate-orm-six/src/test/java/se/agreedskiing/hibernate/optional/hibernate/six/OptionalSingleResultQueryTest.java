@@ -4,26 +4,29 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class OptionalSingleResultQueryTest extends PostgresContainer {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(
     OptionalSingleResultQueryTest.class
   );
   private static final String ALL =
-    "SELECT t FROM Test t WHERE (:uu IS NULL OR t.uu = :uu) AND (:field IS NULL OR t.field = :field) AND (:id IS NULL OR t.id = :id)"; // FAILES
+    "SELECT t FROM Test t WHERE (:uuPresent = FALSE OR t.uu = :uu) AND (:fieldPresent = FALSE OR t.field = :field) AND (:idPresent = FALSE OR t.id = :id)";
   private static final String FIELD = "field";
+  private static final String FIELD_PRESENT = "fieldPresent";
   private static final String ID = "id";
+  private static final String ID_PRESENT = "idPresent";
   private static final String UU = "uu";
+  private static final String UU_PRESENT = "uuPresent";
 
   private static EntityManager em;
 
@@ -96,8 +99,11 @@ class OptionalSingleResultQueryTest extends PostgresContainer {
         em
           .createQuery(ALL)
           .setParameter(ID, id)
+          .setParameter(ID_PRESENT, Objects.nonNull(id))
           .setParameter(FIELD, field)
+          .setParameter(FIELD_PRESENT, Objects.nonNull(field))
           .setParameter(UU, uu)
+          .setParameter(UU_PRESENT, Objects.nonNull(uu))
           .getResultList()
           .size();
     } catch (final Exception e) {

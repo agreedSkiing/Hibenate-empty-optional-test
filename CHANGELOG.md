@@ -1,5 +1,9 @@
 # Changelog
 
+## Merge refactor/remove-main-java-files, Commit
+
+Took this refactoring a bit further and also updated all the test with a working Hibernate ORM 6 query that works across all implementations. I needed to define a new parameter for single check `:parameterPresent = FALSE` and list check queries making the solution from https://www.baeldung.com/spring-data-jpa-null-parameters not applicable in Hibernate ORM 6 and the same for https://stackoverflow.com/a/66956214 answer which was the test for for all previous commits so i went with https://stackoverflow.com/a/67179440 suggestion instead, but the https://stackoverflow.com/a/2489053 answer with ceritera queries is probably a better approach for this kind of solution (the current working one feels like a workaround for this).
+
 ## Commit ee6d3c3737b126b3464ae0913d9e564215133981
 
 So yeah... the single check queries from baeldung do not work at all here with UUID being null, so i think the only help would be to use the same approach as with `IN :parameter` queries, adding another value to the query ☹. See ee6d3c3737b126b3464ae0913d9e564215133981-failures.md
