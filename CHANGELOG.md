@@ -1,6 +1,6 @@
 # Changelog
 
-## Merge refactor/remove-main-java-files, Commit
+## Commit 168246d44dce12fc3c401027df79fb15d238df23
 
 Took this refactoring a bit further and also updated all the test with a working Hibernate ORM 6 query that works across all implementations. I needed to define a new parameter for single check `:parameterPresent = FALSE` and list check queries making the solution from https://www.baeldung.com/spring-data-jpa-null-parameters not applicable in Hibernate ORM 6 and the same for https://stackoverflow.com/a/66956214 answer which was the test for for all previous commits so i went with https://stackoverflow.com/a/67179440 suggestion instead, but the https://stackoverflow.com/a/2489053 answer with ceritera queries is probably a better approach for this kind of solution (the current working one feels like a workaround for this).
 
